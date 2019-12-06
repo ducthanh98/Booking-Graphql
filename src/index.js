@@ -1,10 +1,11 @@
 // @flow
 import express, { Application } from 'express';
-import { buildSchema } from 'graphql';
 import graphqlHttp from 'express-graphql';
 import mongoose from 'mongoose';
-import eventSchema from './models/event.model';
 
+
+import graphqlSchema from './graphql/schemas/index';
+import graphqlResolvers from './graphql/resolvers/index';
 class Server {
     constructor() {
         this.app = express();
@@ -28,60 +29,8 @@ class Server {
     useGraphql = () => {
         this.app.use('/graphql',
             graphqlHttp({
-                schema: buildSchema(`
-                type Event {
-                    _id:ID!
-                    title:String!
-                    description:String!
-                    price:Float!
-                    date:String!
-                }
-
-                input EventInput{
-                    title:String!
-                    description:String!
-                    price:Float!
-                    date: String!
-                }
-
-                type RootQuery{
-                    events : [Event!]!
-                }   
-                
-                type RootMutation {
-                    createEvent(eventInput:EventInput):Event
-                }
-            
-                schema {
-                        query: RootQuery
-                        mutation: RootMutation
-                    }
-            `),
-                rootValue: {
-                    events: () => {
-                        return eventSchema.find()
-                            .then((result) => {
-                                return result.map((event) => {
-                                    return { ...event._doc, _id: event._doc._id.toString() }
-                                })
-                            })
-                    },
-                    createEvent: (args) => {
-                        const event = new eventSchema({
-                            title: args.eventInput.title,
-                            description: args.eventInput.description,
-                            price: args.eventInput.price,
-                            date: new Date(args.eventInput.date)
-                        })
-                        event.save()
-                            .then((result) => {
-                                return { ...result._doc, _id: result._doc._id.toString() }
-                            }).catch((err) => {
-                                throw err;
-                            })
-                        return event;
-                    }
-                },
+                schema: graphqlSchema,
+                rootValue: graphqlResolvers,
                 graphiql: true
             }))
     }
