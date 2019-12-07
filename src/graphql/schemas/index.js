@@ -2,11 +2,11 @@ import { buildSchema } from 'graphql';
 import mergeSchema from './merge';
 export default buildSchema(`
 
-${mergeSchema}
+    ${mergeSchema}
 
-schema {
-        query: RootQuery
-        mutation: RootMutation
-    }
+    schema {
+            query: RootQuery
+            mutation: RootMutation
+        }
 `);
 
