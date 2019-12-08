@@ -6,11 +6,12 @@ import mongoose from 'mongoose';
 
 import graphqlSchema from './graphql/schemas/index';
 import graphqlResolvers from './graphql/resolvers/index';
+import checkAuth from './middlewares/authentication';
 class Server {
     constructor() {
         this.app = express();
         this.events = [];
-        this.port = process.env.port || 3000;
+        this.port = process.env.port || 4200;
         this.routes();
         this.config();
         this.useGraphql();
@@ -18,6 +19,7 @@ class Server {
 
     config: void = () => {
         this.app.use(express.json());
+        this.app.use(checkAuth);
         mongoose.connect(`mongodb+srv://admin:JNfcK2lBBh0b9xwm@cluster0-7u2rc.mongodb.net/graphql?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
             if (err) console.log(err);
         })

@@ -17,7 +17,10 @@ export default {
             throw error;
         }
     },
-    bookEvent: async args => {
+    bookEvent: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Forbidden');
+        }
         const booking = new bookingSchema({
             user: '5dea0ab4e99782107c1d40bb',
             event: args.eventId,
@@ -32,6 +35,9 @@ export default {
     },
     cancelBooking: async args => {
         try {
+            if (!req.isAuth) {
+                throw new Error('Forbidden');
+            }
             const booking = await bookingSchema.findById(args.bookingId);
             if (!booking) {
                 throw new Error('ID is not match with any Booking')

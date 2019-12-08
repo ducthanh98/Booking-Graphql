@@ -3,8 +3,11 @@ import eventSchema from '../../models/event.model';
 import userSchema from '../../models/user.model';
 
 export default {
-    events: async () => {
+    events: async (args, req) => {
         try {
+            if (!req.isAuth) {
+                throw new Error('Forbidden');
+            }
             const result = await eventSchema.find().populate('creator');
             result.map((event) => {
                 return { ...event._doc, _id: event._doc._id.toString() }
@@ -15,8 +18,11 @@ export default {
         }
 
     },
-    createEvent: async (args) => {
+    createEvent: async (args, req) => {
         try {
+            if (!req.isAuth) {
+                throw new Error('Forbidden');
+            }
             const event = new eventSchema({
                 title: args.eventInput.title,
                 description: args.eventInput.description,
@@ -28,7 +34,6 @@ export default {
             return { ...result._doc, _id: result._doc._id.toString() }
         } catch (err) {
             throw err;
-
         }
 
     },

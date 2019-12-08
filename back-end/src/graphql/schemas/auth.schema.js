@@ -12,6 +12,12 @@ const authSchema = `
         email:String!
         password:String!
     }
+
+    type AuthData {
+        userId:String!
+        token:String!
+        tokenExpiration:Int!
+    }
 `;
 
 export default authSchema;
