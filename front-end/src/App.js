@@ -1,25 +1,27 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import logo from './logo.svg';
+import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
+
+import { AuthComponent } from './pages/auth/Auth';
+import { Header } from './layouts/header/header';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Fragment>
+        <Header></Header>
+        <Switch>
+          <Redirect exact from="/" to="/auth" />
+          <Route path="/auth" component={AuthComponent}></Route>
+          <Route path="/events" component={null}></Route>
+          <Route path="/bookings" component={null}></Route>
+        </Switch>
+
+      </Fragment>
+    </BrowserRouter>
   );
 }
 

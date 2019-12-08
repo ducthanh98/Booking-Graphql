@@ -2,7 +2,7 @@
 import express, { Application } from 'express';
 import graphqlHttp from 'express-graphql';
 import mongoose from 'mongoose';
-
+import cors from 'cors';
 
 import graphqlSchema from './graphql/schemas/index';
 import graphqlResolvers from './graphql/resolvers/index';
@@ -19,6 +19,7 @@ class Server {
 
     config: void = () => {
         this.app.use(express.json());
+        this.app.use(cors());
         this.app.use(checkAuth);
         mongoose.connect(`mongodb+srv://admin:JNfcK2lBBh0b9xwm@cluster0-7u2rc.mongodb.net/graphql?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
             if (err) console.log(err);
