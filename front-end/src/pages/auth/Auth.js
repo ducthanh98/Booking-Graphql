@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import axios from 'axios';
 import Toastr from '../../common/Toast/Toast';
+import AuthContext from '../../context/auth.context';
+
 import './Auth.css';
 export class AuthComponent extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.email = React.createRef();
         this.password = React.createRef();
         this.state = {
@@ -15,6 +17,8 @@ export class AuthComponent extends Component {
             modalContent: 'Hi'
         }
     }
+
+    static contextType = AuthContext;
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -70,15 +74,19 @@ export class AuthComponent extends Component {
                 }
                 return res.data;
             })
-            .then((data) => {
-                if (!data.errors) {
-                    console.log(data);
+            .then((res) => {
+                if (!res.errors && this.state.isLogin) {
+                    this.context.login(res.data.login.token, res.data.login.userId);
+                    this.props.history.push("/events")
                 } else {
-                    this.handleNotifi(data.errors[0].message);
+                    this.handleNotifi(res.errors[0].message);
                 }
             })
             .catch((error) => {
-                this.handleNotifi(error.response.data.errors[0].message);
+                if (error.response) {
+                    this.handleNotifi(error.response.data.errors[0].message);
+                }
+                console.log(error)
             })
 
     }

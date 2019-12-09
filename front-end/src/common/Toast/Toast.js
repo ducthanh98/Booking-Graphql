@@ -20,7 +20,7 @@ const Toastr = (props) => {
             >
                 <Toast.Header>
                     <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-                    <strong className="mr-auto">App</strong>
+                    <strong className="mr-auto">Booking App</strong>
                 </Toast.Header>
                 <Toast.Body style={{ backgroundColor: 'white' }}>{content}</Toast.Body>
             </Toast>
